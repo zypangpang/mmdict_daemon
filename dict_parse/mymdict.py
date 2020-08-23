@@ -430,6 +430,15 @@ class MDict(object):
         assert (size_counter == record_block_info_size)
         return record_block_info_list
 
+    def get_block_info(self):
+        record_block_data_offset = self._record_block_offset + self._number_width * 4 \
+                                   + self._number_width * 2 * len(self._record_block_info_list)
+        size_count=0
+        result=[]
+        for comp_size,decomp_size in self._record_block_info_list:
+            result.append((record_block_data_offset+size_count,comp_size,decomp_size))
+            size_count+= comp_size
+        return result
 
 
 class MDD(MDict):
@@ -558,7 +567,7 @@ class MDX(MDict):
         i = 0
         size_counter = 0
         record_block_info_list=self._record_block_info_list
-        for compressed_size, decompressed_size in record_block_info_list:
+        for block_idx, (compressed_size, decompressed_size) in enumerate(record_block_info_list):
             record_block_compressed = f.read(compressed_size)
             # 4 bytes indicates block compression type
             record_block_type = record_block_compressed[:4]
@@ -597,7 +606,8 @@ class MDX(MDict):
                     record_end = len(record_block) + offset
                 i += 1
 
-                yield key_text.decode("utf-8"),(record_block_data_offset+size_counter,compressed_size,decompressed_size,record_start-offset,record_end-offset)
+                #yield key_text.decode("utf-8"),(record_block_data_offset+size_counter,compressed_size,decompressed_size,record_start-offset,record_end-offset)
+                yield key_text.decode("utf-8"),(block_idx,record_start-offset,record_end-offset)
 
             offset += len(record_block)
             size_counter += compressed_size

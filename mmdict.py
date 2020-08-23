@@ -135,7 +135,9 @@ class Main():
         configs=DictConfigs(config_path)
         dict_folder=Path(dict_folder)
 
+        logging.info("Importing mdx...")
         names=cls.__import_mdx(configs,dict_folder)
+        logging.info("Importing mdd...")
         cls.__import_mdd(configs,dict_folder)
 
         index_foler = configs.get_daemon_value("index folder")

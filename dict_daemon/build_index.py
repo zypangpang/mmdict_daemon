@@ -43,7 +43,12 @@ class IndexManipulator():
         logging.info(f"building index for new dictionary {dict_name} ...")
 
         mdx = MDX(dict_path)
-        index_obj = {key: index for key, index in mdx.items()}
+        block_info=mdx.get_block_info()
+        key_offsets = {key: index for key, index in mdx.items()}
+        index_obj={
+            'b':block_info,
+            'k':key_offsets
+        }
         jsonbytes = json.dumps(index_obj, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
         compressed_bytes = zlib.compress(jsonbytes)
         with open(path, "wb") as f:
