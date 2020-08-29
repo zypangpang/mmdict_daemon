@@ -82,9 +82,9 @@ class DictDaemon():
 
     def list_dictionaries(self,enabled=True):
         if enabled:
-            return [[name]+self.dictionaries[name] for name in self.enabled_dicts]
+            return [','.join([name]+self.dictionaries[name]) for name in self.enabled_dicts]
         else:
-            return [[name]+self.dictionaries[name] for name in self.dictionaries.keys()]
+            return [','.join([name]+self.dictionaries[name]) for name in self.dictionaries.keys()]
 
     def extract_mdds(self,mdds:dict):
         error_dicts=[]
