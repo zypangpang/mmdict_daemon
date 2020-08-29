@@ -177,7 +177,11 @@ class Main():
         List dictionaries
         :param enabled: Only list enabled dicts or all dicts. Default True
         """
-        print('\n'.join(DictDaemon(DictConfigs(constants.DEFAULT_CONFIG_PATH),False).list_dictionaries(enabled)))
+        dicts=DictDaemon(DictConfigs(constants.DEFAULT_CONFIG_PATH), False).list_dictionaries(enabled)
+        ans=[]
+        for dict_info in dicts:
+            ans.append(', '.join(dict_info))
+        print('\n'.join(ans))
 
 
 if __name__ == "__main__":
