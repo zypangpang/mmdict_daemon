@@ -9,17 +9,8 @@ class IndexBuildError(Exception):
         self.error_dicts=error_dicts
 
 class DictDaemon():
-    def __init__(self,config_path=None,load_index=True):
-        if not config_path:
-            config_path=constants.DEFAULT_CONFIG_PATH
-
-        if not os.path.exists(config_path):
-            logging.error(f"config file '{config_path}' not exist.")
-            logging.error("If this is the first time you run, run 'python mmdict.py init' to init configs.")
-            exit(1)
-
+    def __init__(self,configs,load_index=True):
         logging.info("Loading configs... ")
-        configs=DictConfigs(config_path)
         self.dictionaries=configs.get_dictionary_paths()
         self.index_prefix=configs.get_daemon_value("index folder")
         self.enabled_dicts=configs.get_enabled_dicts()

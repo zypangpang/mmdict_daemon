@@ -21,19 +21,20 @@ class Main():
     """
     mmDict: A simple mdict lookup daemon
     """
-    __config_file=None
+    __config=None
 
     @classmethod
     def __run_server(cls):
         global server
-        if constants.OS_NAME == "Linux" or constants.OS_NAME=="Darwin":
+        #if constants.OS_NAME == "Linux" or constants.OS_NAME=="Darwin":
+        if constants.HOST=='unix':
             if os.path.exists(constants.SOCKET_LOCATION):
                 logging.info("mmDict already running")
                 logging.info(f"If you are sure mmDict is not running, you can delete {constants.SOCKET_LOCATION} first, "
                       f"then try to run again.")
                 exit(0)
 
-            MyTCPHandler.dict_daemon=DictDaemon(cls.__config_file)
+            MyTCPHandler.dict_daemon = DictDaemon(cls.__config)
 
             # Register signal handler for server cleaning
             signal.signal(signal.SIGINT, signal_handler)
@@ -44,13 +45,15 @@ class Main():
             server.serve_forever()
 
         else:
-            MyTCPHandler.dict_daemon=DictDaemon(cls.__config_file)
+            host=cls.__config.get_daemon_value("host")
+            port=cls.__config.get_daemon_value("port")
             logging.info("running with TCP socket")
             try:
-                server=socketserver.TCPServer((constants.HOST,constants.PORT), MyTCPHandler)
+                server=socketserver.TCPServer((host,int(port)), MyTCPHandler)
+                MyTCPHandler.dict_daemon = DictDaemon(cls.__config)
                 server.serve_forever()
             except OSError:
-                logging.error(f"{constants.HOST}:{constants.PORT} is already in use.")
+                logging.error(f"{host}:{port} is already in use.")
 
 
     @classmethod
@@ -60,7 +63,16 @@ class Main():
         :param d: run as daemon process
         :param config_file: Optional. custom config file path.
         """
-        cls.__config_file=config_file
+        if not config_file:
+            config_file=constants.DEFAULT_CONFIG_PATH
+
+        if not os.path.exists(config_file):
+            logging.error(f"config file '{config_file}' not exist.")
+            logging.error("If this is the first time you run, run 'python mmdict.py init' to init configs.")
+            exit(1)
+
+        cls.__config=DictConfigs(config_file)
+
         if d:
             logging.info("Run mmDcit in background")
             with daemon.DaemonContext():

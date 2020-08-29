@@ -3,6 +3,8 @@ from pathlib import Path
 from constants import CONFIG_DAEMON_SECTION,CONFIG_FRONTEND_SECTION,DEFAULT_CONFIG_PATH
 
 class DictConfigs():
+    HOST='host'
+    PORT='port'
     DICT_FILED="dictionaries"
     ENABLED_FILED="enabled dictionaries"
 
@@ -12,10 +14,12 @@ class DictConfigs():
         configs = configparser.ConfigParser()
         configs[CONFIG_DAEMON_SECTION] = {
             "index folder": str(index_folder),
+            cls.HOST: '0.0.0.0',
+            cls.PORT: 9999,
             cls.DICT_FILED: "/home/user/example.mdx",
             cls.ENABLED_FILED: "example.mdx"
+
         }
-        configs[CONFIG_FRONTEND_SECTION] = {}
         with open(DEFAULT_CONFIG_PATH, "w") as f:
             configs.write(f)
 
