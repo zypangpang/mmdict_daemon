@@ -27,7 +27,9 @@ class Main():
     def __run_server(cls):
         global server
         #if constants.OS_NAME == "Linux" or constants.OS_NAME=="Darwin":
-        if constants.HOST=='unix':
+        host = cls.__config.get_daemon_value("host")
+        port = cls.__config.get_daemon_value("port")
+        if host=='unix':
             if os.path.exists(constants.SOCKET_LOCATION):
                 logging.info("mmDict already running")
                 logging.info(f"If you are sure mmDict is not running, you can delete {constants.SOCKET_LOCATION} first, "
@@ -45,8 +47,7 @@ class Main():
             server.serve_forever()
 
         else:
-            host=cls.__config.get_daemon_value("host")
-            port=cls.__config.get_daemon_value("port")
+
             logging.info("running with TCP socket")
             try:
                 server=socketserver.TCPServer((host,int(port)), MyTCPHandler)
@@ -86,9 +87,10 @@ class Main():
         Rebuild dictionary indexes
         :param dicts: Optional. dicts for rebuilding index
         '''
+        configs=DictConfigs(constants.DEFAULT_CONFIG_PATH)
         dicts=dicts.split(",")
         logging.info(f"Rebuilding index for {dicts}")
-        DictDaemon(load_index=False).rebuild_index(dicts)
+        DictDaemon(configs,load_index=False).rebuild_index(dicts)
         logging.info("Done")
 
 
@@ -114,7 +116,7 @@ class Main():
     @classmethod
     def __import_mdx(cls,configs,dict_folder):
         dicts = {x.stem: str(x.absolute()) for x in dict_folder.iterdir() if x.is_file() and x.suffix == '.mdx'}
-        dict_daemon=DictDaemon(load_index=False)
+        dict_daemon=DictDaemon(configs,load_index=False)
         try:
             dict_daemon._build_indexes(dicts)
         except IndexBuildError as e:
@@ -130,7 +132,7 @@ class Main():
         mdds = {x.stem: str(x.absolute()) for x in dict_folder.iterdir() if x.is_file() and x.suffix == '.mdd'}
         for dict in mdds.keys():
             Path(index_foler).joinpath(dict).mkdir(mode=0o0755, exist_ok=True)
-        dict_daemon=DictDaemon(load_index=False)
+        dict_daemon=DictDaemon(configs,load_index=False)
         try:
             dict_daemon.extract_mdds(mdds)
         except IndexBuildError as e:
@@ -175,7 +177,7 @@ class Main():
         List dictionaries
         :param enabled: Only list enabled dicts or all dicts. Default True
         """
-        print('\n'.join(DictDaemon(constants.DEFAULT_CONFIG_PATH,False).list_dictionaries(enabled)))
+        print('\n'.join(DictDaemon(DictConfigs(constants.DEFAULT_CONFIG_PATH),False).list_dictionaries(enabled)))
 
 
 if __name__ == "__main__":
