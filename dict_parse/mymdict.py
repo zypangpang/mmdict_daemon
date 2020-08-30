@@ -516,7 +516,7 @@ class MDD(MDict):
         if not os.path.exists(datafolder):
             os.makedirs(datafolder)
         for key, value in self.items():
-            fname = key.decode('utf-8').replace('\\', os.path.sep).lower()
+            fname = key.decode('utf-8').replace('\\', os.path.sep)
             dfname = datafolder + fname
             if not os.path.exists(os.path.dirname(dfname)):
                 os.makedirs(os.path.dirname(dfname))

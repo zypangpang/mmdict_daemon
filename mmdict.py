@@ -139,7 +139,7 @@ class Main():
             logging.error(f"Extract some mdds failed: {e.error_dicts}")
 
     @classmethod
-    def import_dict(cls,dict_folder,config_path=None):
+    def import_dict(cls,dict_folder,mdd=True,config_path=None):
         '''
         Import dictionaries from dict_folder. This will overwrite original settings in mmDict config file.
         :param config_path: Optional. update settings in custom config_path
@@ -151,8 +151,9 @@ class Main():
 
         logging.info("Importing mdx...")
         names=cls.__import_mdx(configs,dict_folder)
-        logging.info("Importing mdd...")
-        cls.__import_mdd(configs,dict_folder)
+        if mdd:
+            logging.info("Importing mdd...")
+            cls.__import_mdd(configs,dict_folder)
 
         index_foler = configs.get_daemon_value("index folder")
         logging.info(f"Imported {len(names)} dictionaries: {names}")
