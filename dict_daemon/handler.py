@@ -1,4 +1,4 @@
-import socketserver,logging,json
+import socketserver,logging,json,subprocess
 from typing import List
 
 
@@ -45,9 +45,13 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 
     def ListWord(self,params:List[str]):
         dict_name=params[0]
-        logging.info(f"List words of {dict_name} dictionary")
-        words=self.dict_daemon.list_all_words(dict_name)
-        return ','.join(words)
+        word=params[1]
+        logging.info(f"Search {word} in word index of {dict_name}")
+        all_words=self.dict_daemon.list_all_words(dict_name)
+        results = subprocess.run(['fzy', '-e', word], input='\n'.join(all_words),
+                                 check=True, text=True, capture_output=True).stdout.split('\n')
+        results = results[:20]
+        return ','.join(results)
 
     def Lookup(self,param_list:List[str]):
         word=param_list[0]
