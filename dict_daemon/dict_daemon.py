@@ -54,15 +54,18 @@ class DictDaemon():
         else:
             dicts=None
         self._build_indexes(rebuild=True,dicts=dicts)
-        self._load_indexes()
+        #self._load_indexes()
 
     def _lookup(self,word,dict_name):
         dict_index=self.index_obj[dict_name]
         if word not in dict_index['k']:
             raise Exception(f"No '{word}' entry in {dict_name}")
-        key_offset=dict_index['k'][word]
-        index_tuple=dict_index['b'][key_offset[0]]+key_offset[1:]
-        return lookup_utils.decode_record_by_index(self.dictionaries[dict_name][0], index_tuple)
+        key_offset_list=dict_index['k'][word]
+        result_list=[]
+        for key_offset in key_offset_list:
+            index_tuple=dict_index['b'][key_offset[0]]+key_offset[1:]
+            result_list.append(lookup_utils.decode_record_by_index(self.dictionaries[dict_name][0], index_tuple))
+        return '<br/>'.join(result_list)
 
     def lookup(self,word,dicts=None):
         ans={}

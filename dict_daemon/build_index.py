@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from dict_parse.mymdict import MDX,MDD
 import json,zlib,os,logging
 
@@ -33,6 +35,27 @@ class IndexManipulator():
 
     @classmethod
     def build_index(cls,dict_name,dict_path,rebuild):
+        '''
+
+        :param dict_name:
+        :param dict_path:
+        :param rebuild:
+        :return:
+
+        Index format:
+        {
+            'b':[
+                (record_block_begin_offset, compressed_size, decompressed_size),...
+            ],
+            'k':{
+                'word': [
+                            (record_block_index, key_begin_offset,key_end_offset),
+                            (),
+                            ()
+                        ],...
+            }
+        }
+        '''
         path=cls.get_index_file_name(dict_name)
         if not rebuild and os.path.exists(path):
             return
@@ -44,7 +67,11 @@ class IndexManipulator():
 
         mdx = MDX(dict_path)
         block_info=mdx.get_block_info()
-        key_offsets = {key: index for key, index in mdx.items()}
+        key_offsets=defaultdict(list)
+        for key,index in mdx.items():
+            key_offsets[key].append(index)
+
+        #key_offsets = {key: index for key, index in mdx.items()}
         index_obj={
             'b':block_info,
             'k':key_offsets
@@ -84,3 +111,8 @@ class IndexManipulator():
             raise Exception("Please load index first")
         return cls.index_obj[dict_name]
     '''
+
+if __name__ == '__main__':
+    IndexManipulator.index_path_prefix="./"
+    IndexManipulator.build_index("test", "/mnt/document/Dictionary/USE THE RIGHT WORD.mdx",False)
+

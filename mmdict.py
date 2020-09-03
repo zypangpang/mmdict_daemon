@@ -88,8 +88,9 @@ class Main():
         :param dicts: Optional. dicts for rebuilding index
         '''
         configs=DictConfigs(constants.DEFAULT_CONFIG_PATH)
-        dicts=dicts.split(",")
-        logging.info(f"Rebuilding index for {dicts}")
+        if dicts:
+            dicts=dicts.split(",")
+            logging.info(f"Rebuilding index for {dicts}")
         DictDaemon(configs,load_index=False).rebuild_index(dicts)
         logging.info("Done")
 

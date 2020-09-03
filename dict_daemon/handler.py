@@ -57,7 +57,8 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         word=param_list[0]
         dicts=param_list[1:]
         logging.info(f"Lookup word {word} in {dicts if dicts else 'enabled dicts'}")
-        definition_list = self.dict_daemon.lookup(word,dicts)
+        definition_list:dict = self.dict_daemon.lookup(word,dicts)
+        #print(definition_list.get('USE THE RIGHT WORD',''))
         return json.dumps(definition_list,ensure_ascii=False)
 
     def ListDicts(self,params):
