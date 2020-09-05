@@ -6,12 +6,6 @@ import log_config,logging,configparser
 from pathlib import Path
 from dict_daemon.dict_daemon import IndexBuildError
 
-daemon=True
-try:
-    import daemon
-except Exception as e:
-    daemon=False
-
 def signal_handler(sig, frame):
     global server
     try:
@@ -53,7 +47,6 @@ class Main():
             server.serve_forever()
 
         else:
-
             logging.info("running with TCP socket")
             try:
                 server=socketserver.TCPServer((host,int(port)), MyTCPHandler)
@@ -64,7 +57,7 @@ class Main():
 
 
     @classmethod
-    def run(cls,d=False,config_file=None):
+    def run(cls,config_file=None):
         """
         run mmDict server
         :param d: run as daemon process
@@ -80,16 +73,7 @@ class Main():
 
         cls.__config=DictConfigs(config_file)
 
-        if d:
-            if not daemon:
-                logging.error("No daemon found. Make sure python-daemon is installed.")
-                return
-
-            logging.info("Run mmDcit in background")
-            with daemon.DaemonContext():
-                Main.__run_server()
-        else:
-            Main.__run_server()
+        Main.__run_server()
 
     @classmethod
     def rebuild_index(cls,dicts=None):

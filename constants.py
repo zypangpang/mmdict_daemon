@@ -6,7 +6,7 @@ DEFAULT_CONFIG_PATH=Path.home().joinpath(".mmdict/configs.ini")
 SOCKET_LOCATION = "/tmp/mmdict_socket"
 HOST,PORT="localhost",9999
 
-DEBUG=True
+DEBUG=False
 
 CONFIG_DAEMON_SECTION = "dictionary daemon"
 CONFIG_FRONTEND_SECTION= "frontend"
