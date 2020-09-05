@@ -1,9 +1,10 @@
-import constants,logging,os
+import logging,os
 from dict_daemon.dict_config import DictConfigs
 from dict_daemon.build_index import IndexManipulator
 from dict_daemon import lookup_utils
 from pathlib import Path
 from inet_dicts.BaiduFanyi import BaiduFanyi
+from inet_dicts import inet_dict_map
 
 class IndexBuildError(Exception):
     def __init__(self,error_dicts):
@@ -27,7 +28,7 @@ class DictDaemon():
     def _load_indexes(self):
         self.index_obj={}
         for name in self.enabled_dicts:
-            if name in constants.INET_DICTS:
+            if name in inet_dict_map:
                 continue
             self.index_obj[name] = IndexManipulator.load_index(name)
 
@@ -70,9 +71,8 @@ class DictDaemon():
         return '<br/><br/>'.join(result_list)
 
     def _lookup(self,word,dict_name):
-        if dict_name in constants.INET_DICTS:
-            res=BaiduFanyi.lookup(word)
-            print(res)
+        if dict_name in inet_dict_map:
+            res=inet_dict_map[dict_name].lookup(word)
             return res
         return self._lookup_mdx(word,dict_name)
 

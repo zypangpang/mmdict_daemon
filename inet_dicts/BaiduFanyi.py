@@ -5,8 +5,9 @@ import random
 import json
 import configs
 import logging
+from .DictBase import DictBase
 
-class BaiduFanyi:
+class BaiduFanyi(DictBase):
 
     # 百度通用翻译API,不包含词典、tts语音合成等资源，如有相关需求请联系translate_api@baidu.com
     # coding=utf-8
