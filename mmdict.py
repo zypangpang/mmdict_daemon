@@ -1,7 +1,7 @@
 import socketserver,json,signal,sys,os
 from dict_daemon.dict_daemon import DictDaemon,DictConfigs
 from dict_daemon.handler import MyTCPHandler
-import daemon,fire,constants
+import fire,constants
 import log_config,logging,configparser
 from pathlib import Path
 from dict_daemon.dict_daemon import IndexBuildError
@@ -75,6 +75,12 @@ class Main():
         cls.__config=DictConfigs(config_file)
 
         if d:
+            try:
+                import daemon
+            except Exception as e:
+                logging.error("No daemon found. Make sure you install python-daemon package.")
+                return
+
             logging.info("Run mmDcit in background")
             with daemon.DaemonContext():
                 Main.__run_server()
