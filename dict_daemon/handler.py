@@ -1,5 +1,6 @@
 import socketserver,logging,json,subprocess
 from typing import List
+import requests
 
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
@@ -66,4 +67,12 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         logging.info("List dictionaries")
         enabled=extra if extra else 1
         return json.dumps(self.dict_daemon.list_dictionaries(enabled),ensure_ascii=False)
+
+    def Test(self,params):
+
+        headers={'Host': 'fanyi.baidu.com',
+                 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0'}
+        r=requests.get("https://fanyi.baidu.com/#en/zh/hello",headers=headers)
+        return r.text
+
 

@@ -3,6 +3,7 @@ from dict_daemon.dict_config import DictConfigs
 from dict_daemon.build_index import IndexManipulator
 from dict_daemon import lookup_utils
 from pathlib import Path
+from inet_dicts.BaiduFanyi import BaiduFanyi
 
 class IndexBuildError(Exception):
     def __init__(self,error_dicts):
@@ -26,6 +27,8 @@ class DictDaemon():
     def _load_indexes(self):
         self.index_obj={}
         for name in self.enabled_dicts:
+            if name in constants.INET_DICTS:
+                continue
             self.index_obj[name] = IndexManipulator.load_index(name)
 
     def _build_indexes(self,dicts=None,rebuild=False,):
@@ -55,17 +58,24 @@ class DictDaemon():
             dicts=None
         self._build_indexes(rebuild=True,dicts=dicts)
         #self._load_indexes()
-
-    def _lookup(self,word,dict_name):
-        dict_index=self.index_obj[dict_name]
+    def _lookup_mdx(self,word,dict_name):
+        dict_index = self.index_obj[dict_name]
         if word not in dict_index['k']:
             raise Exception(f"No '{word}' entry in {dict_name}")
-        key_offset_list=dict_index['k'][word]
-        result_list=[]
+        key_offset_list = dict_index['k'][word]
+        result_list = []
         for key_offset in key_offset_list:
-            index_tuple=dict_index['b'][key_offset[0]]+key_offset[1:]
+            index_tuple = dict_index['b'][key_offset[0]] + key_offset[1:]
             result_list.append(lookup_utils.decode_record_by_index(self.dictionaries[dict_name][0], index_tuple))
-        return '<br/>'.join(result_list)
+        return '<br/><br/>'.join(result_list)
+
+    def _lookup(self,word,dict_name):
+        if dict_name in constants.INET_DICTS:
+            res=BaiduFanyi.lookup(word)
+            print(res)
+            return res
+        return self._lookup_mdx(word,dict_name)
+
 
     def lookup(self,word,dicts=None):
         ans={}
@@ -84,10 +94,11 @@ class DictDaemon():
         return self.index_obj[dict_name]['k'].keys()
 
     def list_dictionaries(self,enabled=True):
-        if enabled:
-            return [[name]+self.dictionaries[name] for name in self.enabled_dicts]
-        else:
-            return [[name]+self.dictionaries[name] for name in self.dictionaries.keys()]
+        #if enabled:
+            #return [[name]+self.dictionaries[name] for name in self.enabled_dicts]
+        return self.enabled_dicts
+        #else:
+        #    return [[name]+self.dictionaries[name] for name in self.dictionaries.keys()]
 
     def extract_mdds(self,mdds:dict):
         error_dicts=[]

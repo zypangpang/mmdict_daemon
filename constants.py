@@ -13,6 +13,7 @@ CONFIG_FRONTEND_SECTION= "frontend"
 
 ENCODINGS = ['utf-8', 'gb18030', 'utf-16']
 
+INET_DICTS={'baidufanyi'}
 if __name__ == '__main__':
     print(DEFAULT_CONFIG_PATH)
 

@@ -25,7 +25,7 @@ Two simple clients can be found [here](https://github.com/zypangpang/mmdict_clie
     * fire
     * python-daemon (for convenient daemonization. You can omit it if you just use nohup.)
 ## Install
-Since it is constructed by pure Python. After install above dependencies, cloning this repo should be enough.
+Since it is constructed by pure Python, after installing above dependencies, cloning this repo should be enough.
 
 ## Usage
 First run `python mmdict.py init` to init config file. Default file path is `$HOME/.mmdict/configs.ini`.

@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from dict_parse.mymdict import MDX,MDD
-import json,zlib,os,logging
+import json,zlib,os,logging,constants
 
 class IndexManipulator():
 
