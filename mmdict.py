@@ -6,6 +6,12 @@ import log_config,logging,configparser
 from pathlib import Path
 from dict_daemon.dict_daemon import IndexBuildError
 
+daemon=True
+try:
+    import daemon
+except Exception as e:
+    daemon=False
+
 def signal_handler(sig, frame):
     global server
     try:
@@ -75,10 +81,8 @@ class Main():
         cls.__config=DictConfigs(config_file)
 
         if d:
-            try:
-                import daemon
-            except Exception as e:
-                logging.error("No daemon found. Make sure you install python-daemon package.")
+            if not daemon:
+                logging.error("No daemon found. Make sure python-daemon is installed.")
                 return
 
             logging.info("Run mmDcit in background")
