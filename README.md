@@ -23,7 +23,7 @@ Two simple clients can be found [here](https://github.com/zypangpang/mmdict_clie
 * Python dependencies: 
     * python-lzo
     * fire
-    * python-daemon (for convenient daemonization. You can omit it if you just use nohup.)
+    
 ## Install
 Since it is constructed by pure Python, after installing above dependencies, cloning this repo should be enough.
 
