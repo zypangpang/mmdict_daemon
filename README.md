@@ -63,3 +63,10 @@ COMMANDS
        run mmDict server
 ```
 
+## Acknowledgement
+The mdict parse codes are from:
+* [mdict-analysis](https://bitbucket.org/xwang/mdict-analysis)
+* [writemdict](https://github.com/zhansliu/writemdict)
+
+Great thanks to their work. All rights of related codes belong to the authors.
+

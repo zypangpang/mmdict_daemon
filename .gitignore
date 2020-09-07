@@ -6,4 +6,5 @@
 *.ini
 *.log
 .idea/
+configs.py
 *__pycache__*
