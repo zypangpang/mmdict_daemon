@@ -8,14 +8,14 @@ It is only tested on Linux yet, but it should work both on macOS and windows wit
 This repo is the server daemon. Various clients can be developed using the same interface. 
 Two simple clients can be found [here](https://github.com/zypangpang/mmdict_client).
 
-**Note: Both the server ans clients are on an early stage. It might be unstable with bugs. Looking forward to any 
+**Note: Both the server and clients are on an early stage. It might be unstable with bugs. Looking forward to any 
 feedback. Feel free to create issues.**
 
 ### Comparison with [GoldenDict](https://github.com/goldendict/goldendict)
-GoldenDict is a fantastic mdict client which I have used for a long time. But it has several 
+GoldenDict is a fantastic mdict client I have used for a long time. But it has several 
 main drawbacks, which makes me decide to create the new mmDict.
-* The main objective of mmDict is keeping as simple as possible. It only focuses on the main work, i.e. word lookup.
-  goldendict is mature and feature-rich, which also means bloat.
+* The main design objective of mmDict is keeping as simple as possible. It only focuses on the core task, i.e. word lookup.
+  GoldenDict is mature and feature-rich, which also means bloat.
 * mmDict is written in pure Python and keeps as few dependencies as possible.
 * mmDict crosses platforms more easily.
 * The Server/Client model makes it possible to deploy once, run everywhere. You don't need to copy your dictionary 
