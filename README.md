@@ -8,6 +8,20 @@ It is only tested on Linux yet, but it should work both on macOS and windows wit
 This repo is the server daemon. Various clients can be developed using the same interface. 
 Two simple clients can be found [here](https://github.com/zypangpang/mmdict_client).
 
+**Note: Both the server ans clients are on an early stage. It might be unstable with bugs. Looking forward to any 
+feedback. Feel free to create issues.**
+
+### Comparison with [GoldenDict](https://github.com/goldendict/goldendict)
+GoldenDict is a fantastic mdict client which I have used for a long time. But it has several 
+main drawbacks, which makes me decide to create the new mmDict.
+* The main objective of mmDict is keeping as simple as possible. It only focuses on the main work, i.e. word lookup.
+  goldendict is mature and feature-rich, which also means bloat.
+* mmDict is written in pure Python and keeps as few dependencies as possible.
+* mmDict crosses platforms more easily.
+* The Server/Client model makes it possible to deploy once, run everywhere. You don't need to copy your dictionary 
+  files and install goldendict on each device.
+* The Server/Client model makes it easy to develop different clients. 
+
 ### Features
 * Build index once and quick search after.
 * Compressed index file and remove redundancy to optimize mem usage
@@ -16,7 +30,7 @@ Two simple clients can be found [here](https://github.com/zypangpang/mmdict_clie
 * Support both unix socket and TCP socket
 * Pure python implementation with as few dependencies as possible
 
-## Dependencies
+### Dependencies
 * System dependencies: 
     * Python3.6+ 
     * fzy (for quick fuzzy search)
@@ -24,10 +38,10 @@ Two simple clients can be found [here](https://github.com/zypangpang/mmdict_clie
     * python-lzo
     * fire
     
-## Install
+### Install
 Since it is constructed by pure Python, after installing above dependencies, cloning this repo should be enough.
 
-## Usage
+### Usage
 First run `python mmdict.py init` to init config file. Default file path is `$HOME/.mmdict/configs.ini`.
 Then run `python mmdict.py import_dict <dict_dir>` to import dictionary files automatically. After doing these, 
 run `python mmdict.py run` to test the program. Note that the first time you `run`, it will build indexes for all 
@@ -63,7 +77,7 @@ COMMANDS
        run mmDict server
 ```
 
-## Acknowledgement
+### Acknowledgement
 The mdict parse codes are from:
 * [mdict-analysis](https://bitbucket.org/xwang/mdict-analysis)
 * [writemdict](https://github.com/zhansliu/writemdict)
