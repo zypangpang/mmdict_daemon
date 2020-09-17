@@ -1,4 +1,4 @@
-import logging,os
+import logging,os,subprocess
 from dict_daemon.dict_config import DictConfigs
 from dict_daemon.build_index import IndexManipulator
 from dict_daemon import lookup_utils
@@ -91,7 +91,16 @@ class DictDaemon():
     def list_all_words(self,dict_name):
         if dict_name not in self.index_obj:
             raise Exception(f"Unknown dict: {dict_name}")
-        return self.index_obj[dict_name]['k'].keys()
+        return filter(lambda word: word[0]!='@', self.index_obj[dict_name]['k'].keys())
+
+    def search_index(self,word,dict_name=None):
+        if not dict_name:
+            dict_name=self.enabled_dicts[0]
+        all_words = self.list_all_words(dict_name)
+        results = subprocess.run(['fzy', '-e', word], input='\n'.join(all_words),
+                                 check=True, text=True, capture_output=True).stdout.split('\n')
+        results = results[:20]
+        return dict_name,results
 
     def list_dictionaries(self,enabled=True):
         #if enabled:

@@ -1,6 +1,6 @@
 ## mmDict
 **mmDict** is another mdict dictionary which parses mdx/mdd file and serve word definitions. 
-What makes mmDict distinct is the use of Server/Client model. 
+What makes mmDict distinct is the application of Server/Client model. 
 
 It is only tested on Linux yet, but it should work both on macOS and windows with little tweak. <br>
 **It is recommended to deploy on Linux.** You can then use mmDict client on whichever OS you like.

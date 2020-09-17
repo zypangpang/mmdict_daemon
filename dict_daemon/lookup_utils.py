@@ -53,3 +53,7 @@ def decode_record_by_index(filename, index_tuple):
         record = record.decode('utf-8','ignore').strip(u'\x00')
 
     return record
+
+def wrap_word_list_into_links(words):
+    a_list=[f'<a href="entry:{word}">{word}</a>' for word in words]
+    return "No entry found. May be you are looking for:<br><br>"+"<br>".join(a_list)
