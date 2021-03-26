@@ -52,6 +52,7 @@ def decode_record_by_index(filename, index_tuple):
     if not succuss:
         record = record.decode('utf-8','ignore').strip(u'\x00')
 
+    f.close()
     return record
 
 def wrap_word_list_into_links(words):

@@ -17,6 +17,9 @@ class DictDaemon():
         self.index_prefix=configs.get_daemon_value("index folder")
         self.enabled_dicts=configs.get_enabled_dicts()
 
+        IndexManipulator.index_path_prefix = self.index_prefix
+        IndexManipulator.mem_opt = int(configs.get_daemon_value("mem opt"))
+
         if load_index:
             logging.info("Building indexes... ")
             self._build_indexes()
@@ -26,14 +29,13 @@ class DictDaemon():
 
 
     def _load_indexes(self):
-        self.index_obj={}
+        self.index_bytes={}
         for name in self.enabled_dicts:
             if name in inet_dict_map:
                 continue
-            self.index_obj[name] = IndexManipulator.load_index(name)
+            self.index_bytes[name] = IndexManipulator.load_index(name)
 
     def _build_indexes(self,dicts=None,rebuild=False,):
-        IndexManipulator.index_path_prefix = self.index_prefix
         if not os.path.exists(self.index_prefix):
             logging.info("Index folder not exists. Creating...")
             os.makedirs(self.index_prefix)
@@ -59,8 +61,9 @@ class DictDaemon():
             dicts=None
         self._build_indexes(rebuild=True,dicts=dicts)
         #self._load_indexes()
+
     def _lookup_mdx(self,word,dict_name):
-        dict_index = self.index_obj[dict_name]
+        dict_index = IndexManipulator.get_index_obj(self.index_bytes[dict_name])
         if word not in dict_index['k']:
             raise Exception(f"No '{word}' entry in {dict_name}")
         key_offset_list = dict_index['k'][word]
@@ -89,9 +92,9 @@ class DictDaemon():
         return ans
 
     def list_all_words(self,dict_name):
-        if dict_name not in self.index_obj:
+        if dict_name not in self.index_bytes:
             raise Exception(f"Unknown dict: {dict_name}")
-        return filter(lambda word: word[0]!='@', self.index_obj[dict_name]['k'].keys())
+        return filter(lambda word: word[0]!='@', self.index_bytes[dict_name]['k'].keys())
 
     def search_index(self,word,dict_name=None):
         if not dict_name:

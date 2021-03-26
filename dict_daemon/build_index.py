@@ -2,10 +2,12 @@ from collections import defaultdict
 
 from dict_parse.mymdict import MDX,MDD
 import json,zlib,os,logging,constants
+from sys import getsizeof
 
 class IndexManipulator():
 
     index_path_prefix=None
+    mem_opt=False
 
     '''
     @classmethod
@@ -40,7 +42,7 @@ class IndexManipulator():
         :param dict_name:
         :param dict_path:
         :param rebuild:
-        :return:
+             :return:
 
         Index format:
         {
@@ -89,8 +91,22 @@ class IndexManipulator():
             raise Exception(f"No index file for {dict_name}")
         with open(path, "rb") as f:
             compressed_bytes = f.read()
-        decompressed = zlib.decompress(compressed_bytes)
-        return json.loads(decompressed.decode("utf-8"))
+        if not cls.mem_opt:
+            #print(getsizeof(compressed_bytes))
+            decompressed = zlib.decompress(compressed_bytes)
+            #print(getsizeof(decompressed))
+            return json.loads(decompressed.decode("utf-8"))
+        else:
+            return compressed_bytes
+
+    @classmethod
+    def get_index_obj(cls, index_bytes):
+        if cls.mem_opt:
+            decompressed = zlib.decompress(index_bytes)
+            return json.loads(decompressed.decode("utf-8"))
+        else:
+            return index_bytes
+
 
     '''
     @classmethod
